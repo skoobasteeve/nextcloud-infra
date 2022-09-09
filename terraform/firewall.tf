@@ -1,4 +1,4 @@
-resource "linode_firewall" "my_firewall" {
+resource "linode_firewall" "nextcloud" {
   label = "nextcloud"
 
   inbound {
