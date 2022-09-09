@@ -1,0 +1,35 @@
+localhost:80 {
+
+    root * /var/www/html
+    file_server
+    php_fastcgi nextcloud.dns.podman:9000 {
+        root /var/www/html
+        trusted_proxies private_ranges
+        env front_controller_active true
+    }
+    
+    encode gzip
+
+    header {
+        Strict-Transport-Security "max-age=15768000;includeSubDomains;preload"
+    }
+
+    # .htaccess / data / config / ... shouldn't be accessible from outside
+	@forbidden {
+		path /.htaccess
+		path /data/*
+		path /config/*
+		path /db_structure
+		path /.xml
+		path /README
+		path /3rdparty/*
+		path /lib/*
+		path /templates/*
+		path /occ
+		path /console.php
+	}
+	respond @forbidden 404
+
+    redir /.well-known/carddav /remote.php/dav 301
+    redir /.well-known/caldav /remote.php/dav 301
+}
