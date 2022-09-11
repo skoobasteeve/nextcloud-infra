@@ -2,7 +2,7 @@ localhost:80 {
 
     root * /var/www/html
     file_server
-    php_fastcgi nextcloud.dns.podman:9000 {
+    php_fastcgi nextcloud-app:9000 {
         root /var/www/html
         trusted_proxies private_ranges
         env front_controller_active true
