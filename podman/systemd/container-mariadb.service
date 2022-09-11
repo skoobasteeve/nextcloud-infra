@@ -28,7 +28,8 @@ ExecStart=/usr/bin/podman run \
 	--env MYSQL_USER=nextcloud \
 	--env MYSQL_PASSWORD=password \
 	--env MYSQL_ROOT_PASSWORD=password \
-	--volume /home/raylyon/Github/nextcloud-linode/podman/mariadb:/var/lib/mysql:z \
+	--volume %h/.podman/nextcloud/mariadb:/var/lib/mysql:z \
+	--label "io.containers.autoupdate=local" \
 	--name mariadb docker.io/library/mariadb:10
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id

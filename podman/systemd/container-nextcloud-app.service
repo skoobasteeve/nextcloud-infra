@@ -30,7 +30,8 @@ ExecStart=/usr/bin/podman run \
 	--env MYSQL_PASSWORD=password \
 	--env NEXTCLOUD_ADMIN_USER=admin \
 	--env NEXTCLOUD_ADMIN_PASSWORD=password \
-	--volume /home/raylyon/Github/nextcloud-linode/podman/nextcloud-config:/var/www/html:z \
+	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
+	--label "io.containers.autoupdate=local" \
 	--name nextcloud-app docker.io/library/nextcloud:24-fpm
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id

@@ -24,8 +24,10 @@ ExecStart=/usr/bin/podman run \
 	--sdnotify=conmon \
 	--replace \
 	--detach \
-	--volume /home/raylyon/Github/nextcloud-linode/podman/nextcloud-config:/var/www/html:z \
-	--volume /home/raylyon/Github/nextcloud-linode/podman/caddy/Caddyfile:/etc/caddy/Caddyfile:z \
+	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
+	--volume %h/.podman/nextcloud/caddy/Caddyfile:/etc/caddy/Caddyfile:z \
+	--volume %h/.podman/nextcloud/caddy-data:/data \
+	--label "io.containers.autoupdate=local" \
 	--name caddy docker.io/library/caddy
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
