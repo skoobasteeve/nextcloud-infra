@@ -10,7 +10,7 @@ variable "ROOT_PASS" {
 
 variable "IMAGE_LABEL" {
   type = string
-  default = "packer-centos-stream-9"
+  default = "packer-centos-stream9"
 }
 
 variable "DOMAIN" {
