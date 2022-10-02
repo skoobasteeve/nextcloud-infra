@@ -1,8 +1,11 @@
 terraform {
   backend "s3" {
-    # bucket, access key, secret key need to be set in config file
+    # Below vars set in backend.s3.conf
+    # endpoint = $endpoint
+    # bucket = $bucket
+    # access_key = $access_key
+    # secret_key = $secret_key
     key    = "tfstate/terraform.tfstate"
-    endpoint = "https://s3.us-west-001.backblazeb2.com"
     region = "main"
 
     skip_credentials_validation = true

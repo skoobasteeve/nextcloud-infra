@@ -12,3 +12,18 @@ variable "IMAGE_LABEL" {
   type = string
   default = "packer-centos-stream-9"
 }
+
+variable "DOMAIN" {
+  type = string
+  sensitive = true
+}
+
+variable "SUBDOMAIN" {
+  type = string
+  sensitive = true
+}
+
+variable "DOMAIN_EMAIL" {
+  type = string
+  sensitive = true
+}
