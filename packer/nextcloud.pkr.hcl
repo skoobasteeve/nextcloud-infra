@@ -13,6 +13,11 @@ variable "PASSWORD" {
   default = ""
 }
 
+variable "DOMAIN" {
+  type    = string
+  default = ""
+}
+
 locals {
     podman_dir = "/home/${var.USERNAME}/.podman"
 }
@@ -47,6 +52,11 @@ build {
   provisioner "file" {
     source = "../podman/systemd/"
     destination = "${local.systemd_dir}"
+  }
+
+  provisioner "file" {
+    source = templatefile("../podman/caddy/Caddyfile.tmpl", {domain = var.DOMAIN})
+    destination = "${local.podman_dir}/nextcloud/caddy/Caddyfile"
   }
 
   provisioner "shell" {
