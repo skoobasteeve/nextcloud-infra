@@ -52,9 +52,9 @@ build {
   provisioner "shell" {
     inline = [
         "chown -R ${var.USERNAME}:${var.USERNAME} ${local.podman_dir}",
-        "chown -R ${var.USERNAME}:${var.USERNAME} ${local.systemd_dir}",
+        "chown -R ${var.USERNAME}:${var.USERNAME} /home/${var.USERNAME}/.config",
         "chmod -R 750 ${local.podman_dir}",
-        "chmod -R 750 ${local.systemd_dir}"
+        "chmod -R 750 /home/${var.USERNAME}/.config"
     ]
   }
 }
