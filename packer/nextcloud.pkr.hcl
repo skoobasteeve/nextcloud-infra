@@ -48,6 +48,11 @@ build {
     ]
     script = "image_conf.sh"
     }
+  
+  provisioner "file" {
+    source = "../podman/sysctl.d/"
+    destination = "/etc/sysctl.d"
+  }
 
   provisioner "file" {
     source = "../podman/systemd/"
