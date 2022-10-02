@@ -3,7 +3,13 @@ data "linode_images" "nextcloud_image" {
   latest = true
   filter {
     name = "label"
+    match_by = "substring"
     values = [var.IMAGE_LABEL]
+  }
+  filter {
+    name = "type"
+    match_by = "substring"
+    values = ["manual"]
   }
 }
 
