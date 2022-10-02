@@ -13,6 +13,7 @@ After=pod-nextcloud-pod.service
 
 [Service]
 Environment=PODMAN_SYSTEMD_UNIT=%n
+EnvironmentFile=%h/.nextcloud_env
 Restart=on-failure
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/%n.ctr-id
@@ -26,8 +27,8 @@ ExecStart=/usr/bin/podman run \
 	--detach \
 	--env MYSQL_HOST=mariadb \
 	--env MYSQL_DATABASE=nextcloud \
-	--env MYSQL_USER=nextcloud \
-	--env MYSQL_PASSWORD=password \
+	--env MYSQL_USER=${MYSQL_USER} \
+	--env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
 	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
 	--label "io.containers.autoupdate=local" \
 	--name nextcloud-app docker.io/library/nextcloud:24-fpm
