@@ -60,7 +60,7 @@ build {
   }
 
   provisioner "file" {
-    source = templatefile("../podman/caddy/Caddyfile.tmpl", {domain = var.DOMAIN})
+    content = templatefile("../podman/caddy/Caddyfile.tmpl", {domain = var.DOMAIN})
     destination = "${local.podman_dir}/nextcloud/caddy/Caddyfile"
   }
 
