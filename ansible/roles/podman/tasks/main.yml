@@ -1,0 +1,20 @@
+---
+- name: Install Podman
+  ansible.builtin.package:
+    name: podman
+    state: present
+
+- name: Create install directories
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: '0655'
+  loop:
+    - "{{ podman_dir }}/nextcloud"
+    - "{{ podman_dir }}/nextcloud/nextcloud-config"
+    - "{{ podman_dir }}/nextcloud/mariadb"
+    - "{{ podman_dir }}/nextcloud/caddy"
+    - "{{ podman_dir }}/nextcloud/caddy/caddy-data"
+    - "{{ systemd_dir }}"

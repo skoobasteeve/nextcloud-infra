@@ -1,0 +1,9 @@
+---
+- name: Configure a Nextcloud server based on Podman
+  hosts: nextcloud-linode
+  remote_user: "{{ remote_user }}"
+  become: yes
+
+  roles:
+    - common
+    - podman

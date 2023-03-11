@@ -1,0 +1,4 @@
+---
+user: raylyon
+podman_dir: /home/raylyon/.podman
+systemd_dir: "/home/{{ user }}/.config/systemd/user"
