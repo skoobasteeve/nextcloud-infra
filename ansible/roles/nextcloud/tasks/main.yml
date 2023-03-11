@@ -1,0 +1,64 @@
+---
+- name: Install Podman
+  ansible.builtin.package:
+    name: podman
+    state: present
+
+- name: Create install directories
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0750"
+  loop:
+    - "{{ podman_dir }}/nextcloud"
+    - "{{ podman_dir }}/nextcloud/nextcloud-config"
+    - "{{ podman_dir }}/nextcloud/mariadb"
+    - "{{ podman_dir }}/nextcloud/caddy"
+    - "{{ podman_dir }}/nextcloud/caddy/caddy-data"
+    - "{{ systemd_dir }}"
+
+- name: Allow unprivileged access to port 80
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_unprivileged_port_start
+    value: '80'
+    state: present
+
+- name: Copy systemd unit files
+  ansible.builtin.copy:
+    src: files/systemd/
+    dest: "{{ systemd_dir }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0750"
+
+- name: Copy caddyfile template
+  ansible.builtin.template:
+    src: templates/Caddyfile.j2
+    dest: "{{ podman_dir }}/nextcloud/caddy/Caddyfile"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0750"
+
+- name: Copy nextcloud env template
+  ansible.builtin.template:
+    src: templates/.nextcloud_env.j2
+    dest: "/home/{{ user }}/.nextcloud_env"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0750"
+
+- name: Reload systemd
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Start systemd services
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    state: started
+  loop:
+    - "pod-nextcloud-pod.service"
+    - "container-mariadb.service"
+    - "container-nextcloud-app.service"
+    - "container-caddy.service"

@@ -3,21 +3,21 @@
   ansible.builtin.package_facts:
 
 - name: Get service facts
-  service_facts:
+  ansible.builtin.service_facts:
 
 - name: Add default ssh keys
-  authorized_key:
+  ansible.posix.authorized_key:
     key: "{{ lookup('file', '{{ ssh_keyfile }}') }}"
     user: "{{ user }}"
     state: present
-    exclusive: True
+    exclusive: true
 
 - name: Disable password ssh auth
   ansible.builtin.lineinfile:
     path: "/etc/ssh/sshd_config"
     regexp: '^PasswordAuthentication'
     line: 'PasswordAuthentication no'
-    backrefs: yes
+    backrefs: true
   notify: restart ssh service - {{ ansible_distribution_file_variety }}
 
 - name: Upgrade all packages to latest version - Debian
@@ -52,7 +52,7 @@
     path: "/etc/dnf/automatic.conf"
     regexp: '^upgrade_type ='
     line: 'upgrade_type = security'
-    backrefs: yes
+    backrefs: true
   when: ansible_distribution_file_variety == "RedHat"
 
 - name: Configure automatic security updates step 02 - Red Hat
@@ -60,12 +60,12 @@
     path: "/etc/dnf/automatic.conf"
     regexp: '^apply_updates ='
     line: 'apply_updates = yes'
-    backrefs: yes
+    backrefs: true
   when: ansible_distribution_file_variety == "RedHat"
-  
+
 - name: Enable and start dnf-automatic.timer - Red Hat
   ansible.builtin.systemd:
     state: started
-    enabled: yes
+    enabled: true
     name: dnf-automatic.timer
   when: ansible_distribution_file_variety == "RedHat"
