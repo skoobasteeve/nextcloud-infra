@@ -4,7 +4,7 @@ resource "linode_sshkey" "local" {
 }
 
 resource "linode_instance" "nextcloud" {
-        image = "linode/ubuntu22.04"
+        image = "linode/centos-stream9"
         label = "Nextcloud"
         group = "Terraform"
         region = "us-east"
