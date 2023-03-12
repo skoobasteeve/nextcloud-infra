@@ -8,8 +8,6 @@
   ansible.builtin.file:
     name: "{{ item }}"
     state: directory
-    owner: "{{ user }}"
-    group: "{{ user }}"
     mode: "0750"
   loop:
     - "{{ podman_dir }}/nextcloud"
@@ -24,6 +22,18 @@
     name: net.ipv4.ip_unprivileged_port_start
     value: '80'
     state: present
+
+- name: Permit traffic in default zone for https service
+  ansible.posix.firewalld:
+    service: https
+    permanent: true
+    state: enabled
+
+- name: Permit traffic in default zone for http service
+  ansible.posix.firewalld:
+    service: http
+    permanent: true
+    state: enabled
 
 - name: Copy systemd unit files
   ansible.builtin.copy:
@@ -53,6 +63,18 @@
   ansible.builtin.command:
     cmd: id -u {{ user }}
   register: uid
+
+- name: Check if user is lingering
+  ansible.builtin.stat:
+    path: "/var/lib/systemd/linger/{{ user }}"
+  register: user_lingering
+  when: user != "root"
+
+- name: Enable lingering is needed
+  ansible.builtin.command: "loginctl enable-linger {{ user }}"
+  when:
+    - user != "root"
+    - not user_lingering.stat.exists
 
 - name: Reload systemd
   become: true
