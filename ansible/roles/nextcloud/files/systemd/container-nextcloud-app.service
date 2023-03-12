@@ -31,7 +31,7 @@ ExecStart=/usr/bin/podman run \
 	--env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
 	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
 	--label "io.containers.autoupdate=local" \
-	--name nextcloud-app docker.io/library/nextcloud:24-fpm
+	--name nextcloud-app docker.io/library/nextcloud:25-fpm
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify
