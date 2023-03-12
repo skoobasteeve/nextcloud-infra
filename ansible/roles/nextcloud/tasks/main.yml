@@ -49,16 +49,30 @@
     group: "{{ user }}"
     mode: "0750"
 
+- name: Register uid of {{ user }}
+  ansible.builtin.command:
+    cmd: id -u {{ user }}
+  register: uid
+
 - name: Reload systemd
+  become: true
+  become_user: "{{ user }}"
   ansible.builtin.systemd:
+    scope: user
     daemon_reload: true
 
 - name: Start systemd services
+  become: true
+  become_user: "{{ user }}"
   ansible.builtin.systemd:
     name: "{{ item }}"
+    scope: user
     state: started
+    enabled: true
   loop:
     - "pod-nextcloud-pod.service"
     - "container-mariadb.service"
     - "container-nextcloud-app.service"
     - "container-caddy.service"
+  environment:
+    XDG_RUNTIME_DIR: /run/user/{{ uid.stdout }}

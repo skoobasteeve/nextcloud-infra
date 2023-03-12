@@ -7,7 +7,7 @@
 
 - name: Add default ssh keys
   ansible.posix.authorized_key:
-    key: "{{ lookup('file', '{{ ssh_keyfile }}') }}"
+    key: "{{ lookup('file', 'files/keys') }}"
     user: "{{ user }}"
     state: present
     exclusive: true

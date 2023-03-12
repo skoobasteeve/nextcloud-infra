@@ -1,9 +1,14 @@
 ---
 - name: Configure a Nextcloud server based on Podman
   hosts: nextcloud-linode
-  remote_user: "{{ remote_user }}"
-  become: yes
+  remote_user: raylyon
+  become: true
+
+  vars_files:
+    - roles/common/vars/vars.yml
+    - roles/nextcloud/vars/vars.yml
+    - roles/nextcloud/vars/vault.yml
 
   roles:
     - common
-    - podman
+    - nextcloud

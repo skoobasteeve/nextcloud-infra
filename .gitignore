@@ -5,3 +5,4 @@
 .terraform*
 .env
 pkvars.hcl
+.vault_pass
