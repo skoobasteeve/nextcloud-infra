@@ -5,6 +5,8 @@
     state: present
 
 - name: Create install directories
+  become: true
+  become_user: "{{ user }}"
   ansible.builtin.file:
     name: "{{ item }}"
     state: directory
@@ -16,6 +18,26 @@
     - "{{ podman_dir }}/nextcloud/caddy"
     - "{{ podman_dir }}/nextcloud/caddy/caddy-data"
     - "{{ systemd_dir }}"
+
+- name: Create nextcloud data mount point
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.file:
+    name: /mnt/nextcloud-data
+    state: directory
+    mode: "0750"
+
+- name: Create filesystem in data volume
+  community.general.filesystem:
+    fstype: ext4
+    dev: /dev/sdc
+
+- name: Mount data volume
+  ansible.posix.mount:
+    path: /mnt/nextcloud-data
+    src: /dev/sdc
+    fstype: ext4
+    state: mounted
 
 - name: Allow unprivileged access to port 80
   ansible.posix.sysctl:
