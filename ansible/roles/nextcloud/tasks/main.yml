@@ -45,17 +45,15 @@
     value: '80'
     state: present
 
-- name: Permit traffic in default zone for https service
+- name: Permit traffic in default zone for http(s)
   ansible.posix.firewalld:
-    service: https
+    service: "{{ item }}"
     permanent: true
     state: enabled
-
-- name: Permit traffic in default zone for http service
-  ansible.posix.firewalld:
-    service: http
-    permanent: true
-    state: enabled
+  when: ansible_os_family == "RedHat"
+  loop:
+    - http
+    - https
 
 - name: Copy systemd unit files
   ansible.builtin.copy:
