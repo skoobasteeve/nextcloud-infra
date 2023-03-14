@@ -1,0 +1,43 @@
+---
+- name: Check for tailscale install
+  ansible.builtin.command:
+    cmd: tailscale status
+  register: tailscale_status
+  ignore_errors: true
+
+- name: Check tailscale_status
+  ansible.builtin.debug:
+    msg: "{{ tailscale_status }}"
+
+- name: Download Tailscale install script
+  ansible.builtin.get_url:
+    url: https://tailscale.com/install.sh
+    dest: /tmp/tailscale_install.sh
+    mode: '0555'
+  when: tailscale_status.failed
+
+- name: Run Tailscale install script
+  ansible.builtin.command:
+    cmd: /tmp/tailscale_install.sh
+  when: tailscale_status.failed
+
+- name: Prompt to authorize device
+  ansible.builtin.debug:
+    msg: "Device requires authorization in the TailScale admin panel. Task will wait 60s for you to do so."
+  when:
+    - not tailscale_status.failed
+    - '"not yet authorized" in tailscale_status.stdout'
+
+- name: Start Tailscale
+  ansible.builtin.command:
+    cmd: /usr/bin/tailscale up --authkey "{{ tailscale_key }}"
+  async: 60
+  when: tailscale_status.failed
+  register: tailscale_start_status
+
+- name: Machine added confirmation
+  ansible.builtin.debug:
+    msg: "Device successfully added to TailScale."
+  when:
+    - tailscale_start_status.changed
+    - '"Success" in tailscale_start_status.stderr'
