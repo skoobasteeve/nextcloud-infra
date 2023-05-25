@@ -4,6 +4,15 @@
     name: podman
     state: present
 
+- name: Install required dependencies
+  ansible.builtin.package:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - firewalld
+    - python3-firewall
+    - acl
+
 - name: Create install directories
   become: true
   become_user: "{{ user }}"
@@ -20,11 +29,12 @@
     - "{{ systemd_dir }}"
 
 - name: Create nextcloud data mount point
-  become: true
-  become_user: "{{ user }}"
   ansible.builtin.file:
     name: /mnt/nextcloud-data
+    recurse: true
     state: directory
+    owner: raylyon
+    group: raylyon
     mode: "0750"
 
 - name: Create filesystem in data volume
@@ -35,9 +45,15 @@
 - name: Mount data volume
   ansible.posix.mount:
     path: /mnt/nextcloud-data
-    src: /dev/sdc
+    src: /dev/sdb
     fstype: ext4
     state: mounted
+
+- name: Fix permissions for Nextcloud data directory
+  become: false
+  become_user: :"{{ user }}"
+  ansible.builtin.command:
+    cmd: podman unshare chown -R 33:33 /mnt/nextcloud-data
 
 - name: Allow unprivileged access to port 80
   ansible.posix.sysctl:
