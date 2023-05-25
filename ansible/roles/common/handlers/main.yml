@@ -1,4 +1,4 @@
-- name: Restart ssh service - RedHat
+- name: Restart ssh service
   ansible.builtin.systemd:
     state: restarted
     name: sshd

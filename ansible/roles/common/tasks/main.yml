@@ -18,35 +18,35 @@
     regexp: '^PasswordAuthentication'
     line: 'PasswordAuthentication no'
     backrefs: true
-  notify: Restart ssh service - {{ ansible_os_family }}
+  notify: Restart ssh service
 
-- name: Upgrade all packages to latest version - Red Hat
+- name: Upgrade all packages to latest version
   ansible.builtin.dnf:
     name: "*"
     state: latest
     update_cache: true
     update_only: true
 
-- name: Automatic security updates - redhat
+- name: Automatic security updates
   ansible.builtin.dnf:
     name: dnf-automatic
     state: present
 
-- name: Configure automatic security updates step 01 - Red Hat
+- name: Configure automatic security updates step 01
   ansible.builtin.lineinfile:
     path: "/etc/dnf/automatic.conf"
     regexp: '^upgrade_type ='
     line: 'upgrade_type = security'
     backrefs: true
 
-- name: Configure automatic security updates step 02 - Red Hat
+- name: Configure automatic security updates step 02
   ansible.builtin.lineinfile:
     path: "/etc/dnf/automatic.conf"
     regexp: '^apply_updates ='
     line: 'apply_updates = yes'
     backrefs: true
 
-- name: Enable and start dnf-automatic.timer - Red Hat
+- name: Enable and start dnf-automatic.timer
   ansible.builtin.systemd:
     state: started
     enabled: true
