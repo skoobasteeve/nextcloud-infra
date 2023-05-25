@@ -1,0 +1,9 @@
+---
+user: raylyon
+podman_dir: /home/raylyon/.podman
+systemd_dir: "/home/{{ user }}/.config/systemd/user"
+domain: nextcloud-dev.raylyon.dev
+mysql_password: "{{ vault_mysql_password }}"
+mysql_database: "{{ vault_mysql_database }}"
+mysql_user: "{{ vault_mysql_user }}"
+mysql_root_password: "{{ vault_mysql_root_password }}"

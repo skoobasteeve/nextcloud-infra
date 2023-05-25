@@ -1,0 +1,120 @@
+---
+- name: Install Podman
+  ansible.builtin.package:
+    name: podman
+    state: present
+
+- name: Create install directories
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.file:
+    name: "{{ item }}"
+    state: directory
+    mode: "0750"
+  loop:
+    - "{{ podman_dir }}/nextcloud"
+    - "{{ podman_dir }}/nextcloud/nextcloud-config"
+    - "{{ podman_dir }}/nextcloud/mariadb"
+    - "{{ podman_dir }}/nextcloud/caddy"
+    - "{{ podman_dir }}/nextcloud/caddy/caddy-data"
+    - "{{ systemd_dir }}"
+
+- name: Create nextcloud data mount point
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.file:
+    name: /mnt/nextcloud-data
+    state: directory
+    mode: "0750"
+
+- name: Create filesystem in data volume
+  community.general.filesystem:
+    fstype: ext4
+    dev: /dev/sdc
+
+- name: Mount data volume
+  ansible.posix.mount:
+    path: /mnt/nextcloud-data
+    src: /dev/sdc
+    fstype: ext4
+    state: mounted
+
+- name: Allow unprivileged access to port 80
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_unprivileged_port_start
+    value: '80'
+    state: present
+
+- name: Permit traffic in default zone for http(s)
+  ansible.posix.firewalld:
+    service: "{{ item }}"
+    permanent: true
+    state: enabled
+  when: ansible_os_family == "RedHat"
+  loop:
+    - http
+    - https
+
+- name: Copy systemd unit files
+  ansible.builtin.copy:
+    src: files/systemd/
+    dest: "{{ systemd_dir }}"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0750"
+
+- name: Copy caddyfile template
+  ansible.builtin.template:
+    src: templates/Caddyfile.j2
+    dest: "{{ podman_dir }}/nextcloud/caddy/Caddyfile"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0750"
+
+- name: Copy nextcloud env template
+  ansible.builtin.template:
+    src: templates/.nextcloud_env.j2
+    dest: "/home/{{ user }}/.nextcloud_env"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0750"
+
+- name: Register uid of {{ user }}
+  ansible.builtin.command:
+    cmd: id -u {{ user }}
+  register: uid
+
+- name: Check if user is lingering
+  ansible.builtin.stat:
+    path: "/var/lib/systemd/linger/{{ user }}"
+  register: user_lingering
+  when: user != "root"
+
+- name: Enable lingering is needed
+  ansible.builtin.command: "loginctl enable-linger {{ user }}"
+  when:
+    - user != "root"
+    - not user_lingering.stat.exists
+
+- name: Reload systemd
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.systemd:
+    scope: user
+    daemon_reload: true
+
+- name: Start systemd services
+  become: true
+  become_user: "{{ user }}"
+  ansible.builtin.systemd:
+    name: "{{ item }}"
+    scope: user
+    state: started
+    enabled: true
+  loop:
+    - "pod-nextcloud-pod.service"
+    - "container-mariadb.service"
+    - "container-nextcloud-app.service"
+    - "container-caddy.service"
+  environment:
+    XDG_RUNTIME_DIR: /run/user/{{ uid.stdout }}

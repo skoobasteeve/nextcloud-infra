@@ -26,7 +26,7 @@ ExecStart=/usr/bin/podman run \
 	--detach \
 	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
 	--volume %h/.podman/nextcloud/caddy/Caddyfile:/etc/caddy/Caddyfile:z \
-	--volume %h/.podman/nextcloud/caddy-data:/data \
+	--volume %h/.podman/nextcloud/caddy/caddy-data:/data:z \
 	--label "io.containers.autoupdate=local" \
 	--name caddy docker.io/library/caddy
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id

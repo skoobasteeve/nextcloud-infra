@@ -1,25 +1,10 @@
-
-data "linode_images" "nextcloud_image" {
-  latest = true
-  filter {
-    name = "label"
-    match_by = "substring"
-    values = [var.IMAGE_LABEL]
-  }
-  filter {
-    name = "type"
-    match_by = "substring"
-    values = ["manual"]
-  }
-}
-
 resource "linode_sshkey" "local" {
   label = "local"
   ssh_key = chomp(file("~/.ssh/id_rsa.pub"))
 }
 
 resource "linode_instance" "nextcloud" {
-        image = data.linode_images.nextcloud_image.images[0].id
+        image = "linode/centos-stream9"
         label = "Nextcloud"
         group = "Terraform"
         region = "us-east"

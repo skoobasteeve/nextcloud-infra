@@ -1,10 +1,10 @@
-${domain} {
+"{{ domain }}" {
 
     root * /var/www/html
     file_server
     php_fastcgi nextcloud-app:9000 {
         root /var/www/html
-        trusted_proxies private_ranges
+        {# trusted_proxies private_ranges #}
         env front_controller_active true
     }
     

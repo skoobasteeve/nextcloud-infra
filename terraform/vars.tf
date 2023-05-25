@@ -8,11 +8,6 @@ variable "ROOT_PASS" {
   sensitive = true
 }
 
-variable "IMAGE_LABEL" {
-  type = string
-  default = "packer-centos-stream9"
-}
-
 variable "DOMAIN" {
   type = string
   sensitive = true
