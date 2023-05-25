@@ -1,0 +1,3 @@
+---
+tailscale_repo_url: https://pkgs.tailscale.com/stable/centos/9/tailscale.repo
+tailscale_key: "{{ vault_tailscale_key }}"

@@ -8,7 +8,10 @@
     - roles/common/vars/vars.yml
     - roles/nextcloud/vars/vars.yml
     - roles/nextcloud/vars/vault.yml
+    - roles/tailscale/vars/vars.yml
+    - roles/tailscale/vars/vault.yml
 
   roles:
     - common
+    - tailscale
     - nextcloud
