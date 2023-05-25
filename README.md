@@ -2,25 +2,11 @@
 
 ## Requirements
 
-- [Packer](https://www.packer.io/)
+- [Ansible](https://docs.ansible.com)
 - [Terraform](https://www.terraform.io)
 - [Linode](https://www.linode.com) account and API token
 
 ## Instructions
-
-### Packer
-
-The image created by Packer will be an updated installation of Centos Stream 9 with Podman and all necessary files. 
-
-1. Create a `pkvars.hcl` file in the `packer` directory. This should contain values for all variables defined in `nextcloud.pkr.hcl` including your Linode API token and the local username and password you'd like to use for the instance.
-2. Initialize the packer config:
-    ``` shell
-    cd packer
-    packer init nextcloud.pkr.hcl
-3. Build the image in Linode:
-    ``` shell
-    packer build -var-file="pkvars.hcl" nextcloud.pkr.hcl
-    ```
 
 ### Terraform
 
@@ -35,5 +21,7 @@ This will create a Linode instance using the image created above. After creation
 4. Test with `terraform plan`.
 5. Run `terraform apply` when ready.
 
-### Podman
+### Ansible
+
+Coming soon...
 
