@@ -1,9 +1,3 @@
----
-- name: Restart ssh service - Debian
-  ansible.builtin.systemd:
-    state: restarted
-    name: ssh
-
 - name: Restart ssh service - RedHat
   ansible.builtin.systemd:
     state: restarted

@@ -20,32 +20,17 @@
     backrefs: true
   notify: Restart ssh service - {{ ansible_os_family }}
 
-- name: Upgrade all packages to latest version - Debian
-  ansible.builtin.apt:
-    upgrade: true
-    update_cache: true
-    cache_valid_time: 86400
-  when: ansible_distribution_file_variety == "Debian"
-
 - name: Upgrade all packages to latest version - Red Hat
   ansible.builtin.dnf:
     name: "*"
     state: latest
     update_cache: true
     update_only: true
-  when: ansible_os_family == "RedHat"
-
-- name: Automatic security updates - Debian
-  ansible.builtin.apt:
-    package: unattended-upgrades
-    state: present
-  when: ansible_distribution_file_variety == "Debian"
 
 - name: Automatic security updates - redhat
   ansible.builtin.dnf:
     name: dnf-automatic
     state: present
-  when: ansible_os_family == "RedHat"
 
 - name: Configure automatic security updates step 01 - Red Hat
   ansible.builtin.lineinfile:
@@ -53,7 +38,6 @@
     regexp: '^upgrade_type ='
     line: 'upgrade_type = security'
     backrefs: true
-  when: ansible_os_family == "RedHat"
 
 - name: Configure automatic security updates step 02 - Red Hat
   ansible.builtin.lineinfile:
@@ -61,11 +45,9 @@
     regexp: '^apply_updates ='
     line: 'apply_updates = yes'
     backrefs: true
-  when: ansible_os_family == "RedHat"
 
 - name: Enable and start dnf-automatic.timer - Red Hat
   ansible.builtin.systemd:
     state: started
     enabled: true
     name: dnf-automatic.timer
-  when: ansible_os_family == "RedHat"

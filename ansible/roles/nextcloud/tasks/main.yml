@@ -66,7 +66,6 @@
     service: "{{ item }}"
     permanent: true
     state: enabled
-  when: ansible_os_family == "RedHat"
   loop:
     - http
     - https
