@@ -1,10 +1,10 @@
 variable "HETZNER_TOKEN" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "ROOT_PASS" {
-  type = string
+  type      = string
   sensitive = true
 }
 
@@ -13,16 +13,16 @@ variable "SSH_KEYFILE" {
 }
 
 variable "DOMAIN" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "SUBDOMAIN" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "DOMAIN_EMAIL" {
-  type = string
+  type      = string
   sensitive = true
 }

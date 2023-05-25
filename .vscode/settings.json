@@ -1,5 +1,6 @@
 {
     "files.associations": {
       "*.yml": "ansible"
-    }
+    },
+    "ansible.python.interpreterPath": "/home/raylyon/.pyenv/versions/3.11.1/bin/python"
   }

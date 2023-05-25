@@ -30,7 +30,7 @@
 - name: Create filesystem in data volume
   community.general.filesystem:
     fstype: ext4
-    dev: /dev/sdc
+    dev: /dev/sdb
 
 - name: Mount data volume
   ansible.posix.mount:
