@@ -1,4 +1,4 @@
-variable "LINODE_TOKEN" {
+variable "HETZNER_TOKEN" {
   type = string
   sensitive = true
 }
@@ -6,6 +6,10 @@ variable "LINODE_TOKEN" {
 variable "ROOT_PASS" {
   type = string
   sensitive = true
+}
+
+variable "SSH_KEYFILE" {
+  type = string
 }
 
 variable "DOMAIN" {
