@@ -3,6 +3,16 @@ variable "HETZNER_TOKEN" {
   sensitive = true
 }
 
+variable "PORKBUN_API_KEY" {
+  type      = string
+  sensitive = true
+}
+
+variable "PORKBUN_SECRET_KEY" {
+  type      = string
+  sensitive = true
+}
+
 variable "ROOT_PASS" {
   type      = string
   sensitive = true
