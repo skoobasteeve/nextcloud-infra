@@ -49,15 +49,16 @@
     fstype: ext4
     state: mounted
 
-- name: Update permissions for lost+found
+- name: Update permissions after mount
   ansible.builtin.file:
-    name: /mnt/nextcloud-data/lost+found
+    name: /mnt/nextcloud-data
+    recurse: true
     state: directory
     owner: raylyon
     group: raylyon
     mode: "0750"
 
-- name: Fix permissions for Nextcloud data directory
+- name: Give permissions to data directory for container user
   become: false
   become_user: :"{{ user }}"
   ansible.builtin.command:
