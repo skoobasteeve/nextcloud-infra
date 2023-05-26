@@ -1,7 +1,7 @@
 ---
 - name: Configure a Nextcloud server based on Centos Stream 9 and Podman
   hosts: nextcloud-hetzner
-  remote_user: raylyon
+  remote_user: "{{ user }}"
   become: true
 
   vars_files:

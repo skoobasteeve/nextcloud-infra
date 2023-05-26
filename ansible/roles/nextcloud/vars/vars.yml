@@ -1,5 +1,5 @@
 ---
-user: raylyon
+user: "{{ vault_user }}"
 podman_dir: /home/raylyon/.podman
 systemd_dir: "/home/{{ user }}/.config/systemd/user"
 domain: nextcloud-dev.raylyon.dev
