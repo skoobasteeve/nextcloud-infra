@@ -1,12 +1,21 @@
 terraform {
   required_providers {
-    linode = {
-      source = "linode/linode"
-      version = "1.30.0"
+    hcloud = {
+      source  = "hetznercloud/hcloud"
+      version = "1.39.0"
+    }
+    porkbun = {
+      source  = "cullenmcdermott/porkbun"
+      version = "0.2.0"
     }
   }
 }
 
-provider "linode" {
-  token = var.LINODE_TOKEN
+provider "hcloud" {
+  token = var.HETZNER_TOKEN
+}
+
+provider "porkbun" {
+  api_key    = var.PORKBUN_API_KEY
+  secret_key = var.PORKBUN_SECRET_KEY
 }

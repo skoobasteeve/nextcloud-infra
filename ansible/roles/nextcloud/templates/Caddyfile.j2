@@ -4,11 +4,14 @@
     file_server
     php_fastcgi nextcloud-app:9000 {
         root /var/www/html
-        {# trusted_proxies private_ranges #}
         env front_controller_active true
     }
     
     encode gzip
+
+    log {
+        output file /data/{{ domain }}-access.log
+    }
 
     header {
         Strict-Transport-Security "max-age=15768000;includeSubDomains;preload"

@@ -1,24 +1,38 @@
-variable "LINODE_TOKEN" {
-  type = string
+variable "HETZNER_TOKEN" {
+  type      = string
+  sensitive = true
+}
+
+variable "PORKBUN_API_KEY" {
+  type      = string
+  sensitive = true
+}
+
+variable "PORKBUN_SECRET_KEY" {
+  type      = string
   sensitive = true
 }
 
 variable "ROOT_PASS" {
-  type = string
+  type      = string
   sensitive = true
 }
 
-variable "DOMAIN" {
+variable "SSH_KEYFILE" {
   type = string
+}
+
+variable "DOMAIN" {
+  type      = string
   sensitive = true
 }
 
 variable "SUBDOMAIN" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "DOMAIN_EMAIL" {
-  type = string
+  type      = string
   sensitive = true
 }

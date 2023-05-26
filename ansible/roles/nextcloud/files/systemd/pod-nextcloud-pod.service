@@ -16,7 +16,13 @@ Environment=PODMAN_SYSTEMD_UNIT=%n
 Restart=on-failure
 TimeoutStopSec=70
 ExecStartPre=/bin/rm -f %t/pod-nextcloud-pod.pid %t/pod-nextcloud-pod.pod-id
-ExecStartPre=/usr/bin/podman pod create --infra-conmon-pidfile %t/pod-nextcloud-pod.pid --pod-id-file %t/pod-nextcloud-pod.pod-id --publish 80:80 --publish 443:443 nextcloud-pod
+ExecStartPre=/usr/bin/podman pod create \
+    --infra-conmon-pidfile %t/pod-nextcloud-pod.pid \
+    --pod-id-file %t/pod-nextcloud-pod.pod-id \
+    --network slirp4netns:port_handler=slirp4netns \
+    --publish 80:80 \
+    --publish 443:443 \
+    nextcloud-pod
 ExecStart=/usr/bin/podman pod start --pod-id-file %t/pod-nextcloud-pod.pod-id
 ExecStop=/usr/bin/podman pod stop --ignore --pod-id-file %t/pod-nextcloud-pod.pod-id -t 10
 ExecStopPost=/usr/bin/podman pod rm --ignore -f --pod-id-file %t/pod-nextcloud-pod.pod-id

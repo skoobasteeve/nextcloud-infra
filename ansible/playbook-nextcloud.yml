@@ -1,14 +1,17 @@
 ---
-- name: Configure a Nextcloud server based on Podman
-  hosts: nextcloud-linode
-  remote_user: raylyon
+- name: Configure a Nextcloud server based on Centos Stream 9 and Podman
+  hosts: nextcloud-hetzner
+  remote_user: "{{ user }}"
   become: true
 
   vars_files:
     - roles/common/vars/vars.yml
     - roles/nextcloud/vars/vars.yml
     - roles/nextcloud/vars/vault.yml
+    - roles/tailscale/vars/vars.yml
+    - roles/tailscale/vars/vault.yml
 
   roles:
     - common
+    - tailscale
     - nextcloud

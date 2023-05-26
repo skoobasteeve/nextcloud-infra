@@ -1,21 +1,33 @@
-resource "linode_sshkey" "local" {
-  label = "local"
-  ssh_key = chomp(file("~/.ssh/id_rsa.pub"))
+resource "hcloud_ssh_key" "local" {
+  name       = "local"
+  public_key = file(var.SSH_KEYFILE)
 }
 
-resource "linode_instance" "nextcloud" {
-        image = "linode/centos-stream9"
-        label = "Nextcloud"
-        group = "Terraform"
-        region = "us-east"
-        type = "g6-nanode-1"
-        authorized_keys = [linode_sshkey.local.ssh_key]
-        root_pass = var.ROOT_PASS
+resource "hcloud_primary_ip" "nextcloud" {
+  name          = "nextcloud"
+  type          = "ipv4"
+  datacenter    = "ash-dc1"
+  auto_delete   = false
+  assignee_type = "server"
 }
 
-resource "linode_volume" "nextcloud-data" {
-    label = "nextcloud-data"
-    region = linode_instance.nextcloud.region
-    linode_id = linode_instance.nextcloud.id
-    size = 120
+resource "hcloud_server" "nextcloud" {
+  name         = "Nextcloud"
+  image        = "centos-stream-9"
+  server_type  = "cpx11"
+  datacenter   = "ash-dc1"
+  ssh_keys     = [hcloud_ssh_key.local.id]
+  firewall_ids = [hcloud_firewall.nextcloud.id]
+  public_net {
+    ipv4_enabled = true
+    ipv4         = hcloud_primary_ip.nextcloud.id
+    ipv6_enabled = true
+  }
+}
+
+resource "hcloud_volume" "nextcloud" {
+  name      = "nextcloud-data"
+  size      = 120
+  server_id = hcloud_server.nextcloud.id
+  automount = false
 }
