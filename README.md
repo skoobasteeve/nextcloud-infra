@@ -15,6 +15,7 @@ The containers run in a Podman pod and are managed as user-level [Systemd servic
 - [Terraform](https://www.terraform.io)
 - [Hetzner Cloud](https://www.hetzner.cloud) account and API token
 - [Porkbun](https://porkbun.com) account and API token (for DNS)
+- [Tailscale](https://tailscale.com/) account and [auth key](https://tailscale.com/kb/1085/auth-keys/)
 
 ## Instructions
 
