@@ -1,17 +1,24 @@
 ---
 - name: Install Podman
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name: podman
     state: present
 
-- name: Install required dependencies
-  ansible.builtin.package:
+- name: Add epel repository
+  ansible.builtin.dnf:
+    name: epel-release
+    state: present
+
+- name: Install additional packages
+  ansible.builtin.dnf:
     name: "{{ item }}"
+    update_cache: true
     state: present
   loop:
     - firewalld
-    - python3-firewall
     - acl
+    - htop
+    - vim-enhanced
 
 - name: Create install directories
   become: true
@@ -114,8 +121,9 @@
   register: user_lingering
   when: user != "root"
 
-- name: Enable lingering is needed
-  ansible.builtin.command: "loginctl enable-linger {{ user }}"
+- name: Enable lingering
+  ansible.builtin.command:
+    cmd: loginctl enable-linger {{ user }}
   when:
     - user != "root"
     - not user_lingering.stat.exists
