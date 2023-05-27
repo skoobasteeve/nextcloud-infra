@@ -21,7 +21,7 @@ The containers run in a Podman pod and are managed as user-level [Systemd servic
 
 ### Terraform
 
-The Terraform files in this repo will create a Hetzner Cloud server instance complete with a firewall and attached block storage volume. In addition, it will create a DNS "A" record in Porkbun that reflects the server's public IP address. After creation, the instance will be available via SSH at the domain name you specified in your `.tfvars` file.
+The Terraform files in this repo will create a Hetzner Cloud server instance complete with an attached firewall and block storage volume. In addition, it will create a DNS "A" record in Porkbun that reflects the server's public IP address. After creation, the instance will be available via SSH at the domain name you specified in your `.tfvars` file.
 
 1. Create a `terraform.tfvars` file in the `terraform` directory. This should contain values for all variables defined in `vars.tf`.
 2. Create a `backend.s3.conf` file to intialize the S3 backend. This should contain values for `bucket`, `access_key`, and `secret_key`.
@@ -67,18 +67,22 @@ Follow the below instructions to prepare the playbook before running.
 
 The Ansible playbook in this repo makes use of [Ansible Vault](https://docs.ansible.com/ansible/latest/vault_guide/index.html) to store sensitive variables. Any variables in the `vars.yml` files that are set to an equivalent variable prefixed with "vault_" are configured in the accompanying `vault.yml` file.
 
-5. Set the  variables in both `vault.yml` files:
+5. Set the non-vault variables in all `vars.yaml` files.
+
+6. Set the  variables in both `vault.yml` files:
     ``` shell
     ansible-vault edit roles/nextcloud/vars/vault.yml
     ansible-vault edit roles/tailscale/vars/vault.yml
     ```
 
-6. The playbook expects a host named "nextcloud-hetzner" in your inventory, so make sure to add/update it before running the playbook.
+7. The playbook expects a host named "nextcloud-hetzner" in your [inventory](https://docs.ansible.com/ansible/latest/inventory_guide/intro_inventory.html), so make sure to add/update it before running the playbook.
 
-7. Once your inventory is up-to-date and variables have been edited in all instances of `vars.yml` and `vault.yml`, run the playbook.
+8. Once your inventory is up-to-date and variables have been edited in all instances of `vars.yml` and `vault.yml`, run the playbook.
     ``` shell
     ansible-playbook --vault-password-file=.vault_pass -i ~/.ansible/hosts --ask-become-pass playbook-nextcloud.yml
     ```
+
+When the playbook finishes running, your Nextcloud server should be available at the domain name specified.
 
 ### Post-Install
 
