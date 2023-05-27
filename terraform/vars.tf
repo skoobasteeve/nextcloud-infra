@@ -26,8 +26,3 @@ variable "SUBDOMAIN" {
   type      = string
   sensitive = true
 }
-
-variable "DOMAIN_EMAIL" {
-  type      = string
-  sensitive = true
-}
