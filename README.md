@@ -82,7 +82,8 @@ The Ansible playbook in this repo makes use of [Ansible Vault](https://docs.ansi
 
 ### Post-Install
 
-Once you've confirmed that the Nextcloud instnace is up and running, add he following lines to `config/config.php` in your Nextcloud directory to optimize the instance and clear warnings:
+#### **Nextcloud config file**
+Once you've confirmed that the Nextcloud instance is up and running, add the following lines to `config/config.php` in your Nextcloud directory to optimize the instance and clear warnings:
 
 Fix trusted proxy warning
 ``` php
@@ -102,6 +103,9 @@ Speed up photo thumbnail generation and reduce size
 'preview_max_x' => '2048',
 'preview_max_y' => '2048',
 'jpeg_quality' => '60',
-
 ```
 
+#### **Nextcloud apps**
+- [Preview Generator](https://apps.nextcloud.com/apps/previewgenerator) - Automatically generate thumbnail previews for photos on a scheduled basis, speeding up load times for previews.
+- [Two-Factor WebAuthn](https://apps.nextcloud.com/apps/twofactor_webauthn) - Use a FIDO2 security key as a second factor.
+- [Tasks](https://apps.nextcloud.com/apps/tasks) - Task management with CalDAV sync.
