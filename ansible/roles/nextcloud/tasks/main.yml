@@ -4,22 +4,6 @@
     name: podman
     state: present
 
-- name: Add epel repository
-  ansible.builtin.dnf:
-    name: epel-release
-    state: present
-
-- name: Install additional packages
-  ansible.builtin.dnf:
-    name: "{{ item }}"
-    update_cache: true
-    state: present
-  loop:
-    - firewalld
-    - acl
-    - htop
-    - vim-enhanced
-
 - name: Create install directories
   become: true
   become_user: "{{ user }}"
