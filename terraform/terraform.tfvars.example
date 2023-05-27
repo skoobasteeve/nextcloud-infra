@@ -1,7 +1,6 @@
 HETZNER_TOKEN      = ""
 PORKBUN_API_KEY    = ""
 PORKBUN_SECRET_KEY = ""
-ROOT_PASS          = ""
 SSH_KEYFILE        = ""
 DOMAIN             = ""
 SUBDOMAIN          = ""

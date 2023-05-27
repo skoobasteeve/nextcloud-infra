@@ -13,11 +13,6 @@ variable "PORKBUN_SECRET_KEY" {
   sensitive = true
 }
 
-variable "ROOT_PASS" {
-  type      = string
-  sensitive = true
-}
-
 variable "SSH_KEYFILE" {
   type = string
 }
