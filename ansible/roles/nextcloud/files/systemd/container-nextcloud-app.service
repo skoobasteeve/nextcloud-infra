@@ -32,7 +32,7 @@ ExecStart=/usr/bin/podman run \
 	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
 	--volume /mnt/nextcloud-data:/var/www/html/data:z \
 	--label "io.containers.autoupdate=local" \
-	--name nextcloud-app docker.io/library/nextcloud:25-fpm
+	--name nextcloud-app docker.io/library/nextcloud:26-fpm
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify
