@@ -27,7 +27,7 @@
     update_cache: true
     update_only: true
 
-- name: Automatic security updates
+- name: Install package for automatic updates
   ansible.builtin.dnf:
     name: dnf-automatic
     state: present
