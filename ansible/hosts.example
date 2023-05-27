@@ -1,0 +1,4 @@
+all:
+  hosts:
+    nextcloud-hetzner:
+      ansible_host: 0.0.0.0 # Server IP address here
