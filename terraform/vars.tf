@@ -26,3 +26,13 @@ variable "SUBDOMAIN" {
   type      = string
   sensitive = true
 }
+
+variable "USER" {
+  type = string
+  sensitive = true
+}
+
+variable "PASS_HASH" {
+  type = string
+  sensitive = true
+}
