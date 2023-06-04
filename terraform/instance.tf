@@ -16,6 +16,7 @@ resource "hcloud_server" "nextcloud" {
   image        = "centos-stream-9"
   server_type  = "cpx11"
   datacenter   = "ash-dc1"
+  user_data    = templatefile("${path.module}/cloud-config.yml.tftpl", { user = var.USER, ssh_key = file(var.SSH_KEYFILE), pass_hash = var.PASS_HASH })
   ssh_keys     = [hcloud_ssh_key.local.id]
   firewall_ids = [hcloud_firewall.nextcloud.id]
   public_net {
