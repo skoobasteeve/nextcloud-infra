@@ -15,6 +15,7 @@
     - "{{ podman_dir }}/nextcloud"
     - "{{ podman_dir }}/nextcloud/nextcloud-config"
     - "{{ podman_dir }}/nextcloud/mariadb"
+    - "{{ podman_dir }}/nextcloud/mysql_backups"
     - "{{ podman_dir }}/nextcloud/caddy"
     - "{{ podman_dir }}/nextcloud/caddy/caddy-data"
     - "{{ systemd_dir }}"
@@ -49,11 +50,17 @@
     group: "{{ user }}"
     mode: "0750"
 
-- name: Give permissions to data directory for container user
+- name: Give permissions to nextcloud data directory for container user
   become: false
   become_user: :"{{ user }}"
   ansible.builtin.command:
     cmd: podman unshare chown -R 33:33 /mnt/nextcloud-data/data
+
+- name: Give permissions to mysql_backups directory for container user
+  become: false
+  become_user: :"{{ user }}"
+  ansible.builtin.command:
+    cmd: podman unshare chown -R 999:999 /home/{{ user }}/.podman/nextcloud/mysql_backups
 
 - name: Allow unprivileged access to port 80
   ansible.posix.sysctl:
@@ -76,7 +83,7 @@
     dest: "{{ systemd_dir }}"
     owner: "{{ user }}"
     group: "{{ user }}"
-    mode: "0750"
+    mode: "0640"
 
 - name: Copy caddyfile template
   ansible.builtin.template:

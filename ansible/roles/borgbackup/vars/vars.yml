@@ -1,0 +1,5 @@
+---
+user: "{{ vault_user }}"
+borg_repo_url: "{{ vault_borg_repo_url }}"
+borg_repo_key: "{{ vault_borg_repo_key }}"
+healthchecks_url: "{{ vault_healthchecks_url }}"
