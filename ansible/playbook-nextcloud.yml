@@ -10,8 +10,11 @@
     - roles/nextcloud/vars/vault.yml
     - roles/tailscale/vars/vars.yml
     - roles/tailscale/vars/vault.yml
+    - roles/borgbackup/vars/vars.yml
+    - roles/borgbackup/vars/vault.yml
 
   roles:
     - common
     - tailscale
     - nextcloud
+    - borgbackup

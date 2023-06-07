@@ -1,0 +1,44 @@
+---
+- name: Install Borg
+  ansible.builtin.dnf:
+    name: borgbackup
+    state: present
+
+- name: Install pip
+  ansible.builtin.dnf:
+    name: python3-pip
+    state: present
+
+- name: Install Borgmatic
+  ansible.builtin.pip:
+    name: borgmatic
+    extra_args: --user
+
+- name: Create borgmatic config directory
+  ansible.builtin.file:
+    name: /etc/borgmatic
+    state: directory
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Copy Borgmatic configuration template
+  ansible.builtin.template:
+    src: templates/borgmatic-config.yaml.j2
+    dest: /etc/borgmatic/config.yaml
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0600"
+
+- name: Copy cron file
+  ansible.builtin.template:
+    src: templates/borgmatic-cron.j2
+    dest: /etc/cron.d/borgmatic
+    owner: root
+    group: root
+    mode: "0644"
+
+- name: Generate SSH keypair
+  community.crypto.openssh_keypair:
+    path: /home/{{ user }}/.ssh/borg_ed25519
+    type: ed25519
