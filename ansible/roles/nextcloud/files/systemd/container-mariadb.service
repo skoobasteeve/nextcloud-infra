@@ -30,6 +30,7 @@ ExecStart=/usr/bin/podman run \
 	--env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
 	--env MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
 	--volume %h/.podman/nextcloud/mariadb:/var/lib/mysql:z \
+	--volume %h/.podman/nextcloud/mysql_backups:/mysql_backups:z \
 	--label "io.containers.autoupdate=local" \
 	--name mariadb docker.io/library/mariadb:10
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
