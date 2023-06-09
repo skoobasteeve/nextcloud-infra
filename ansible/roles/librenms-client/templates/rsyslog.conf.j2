@@ -1,0 +1,5 @@
+*.* @{{ librenms_host }}:514
+
+if $programname == 'snmpd' and $msg contains 'statfs' then {
+          stop
+      }

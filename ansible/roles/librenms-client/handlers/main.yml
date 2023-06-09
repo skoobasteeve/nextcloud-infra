@@ -1,0 +1,16 @@
+---
+- name: Reload systemd configs
+  ansible.builtin.systemd:
+    daemon_reload: true
+
+- name: Enable and restart snmpd.service
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: snmpd
+
+- name: Enable and restart the rsyslog service
+  ansible.builtin.systemd:
+    state: restarted
+    enabled: true
+    name: rsyslog
