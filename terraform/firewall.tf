@@ -31,4 +31,13 @@ resource "hcloud_firewall" "nextcloud" {
     ]
   }
 
+  rule {
+    direction = "in"
+    protocol  = "icmp"
+    source_ips = [
+      "0.0.0.0/0",
+      "::/0"
+    ]
+  }
+
 }
