@@ -408,12 +408,12 @@ hooks:
     # List of one or more shell commands or scripts to execute
     # before creating a backup, run once per repository.
     before_backup:
-        - echo "Starting a backup."
+        - echo "Backup process initiated."
         - echo "Placing Nextcloud in maintenance mode."
         - sudo -u {{ user }} podman exec -u 33 nextcloud-app php occ maintenance:mode --on
         - echo "Dumping MySQL database."
         - sudo -u {{ user }} podman exec -u 999 mariadb sh -c 'mysqldump --single-transaction --default-character-set=utf8mb4 -h localhost -u {{ mysql_user }} --password={{ mysql_password }} {{ mysql_database }} > /mysql_backups/nextcloud-sqlbkp_`date +"%Y%m%d"`.bak'
-
+        - echo "Starting backup."
     # List of one or more shell commands or scripts to execute
     # before pruning, run once per repository.
     before_prune:
