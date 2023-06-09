@@ -1,4 +1,4 @@
-resource "porkbun_dns_record" "nextcloud-dev" {
+resource "porkbun_dns_record" "nextcloud-prod" {
   domain  = var.DOMAIN
   name    = var.SUBDOMAIN
   type    = "A"
