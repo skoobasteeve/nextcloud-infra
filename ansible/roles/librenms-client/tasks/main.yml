@@ -46,7 +46,6 @@
     mode: '0644'
   notify:
     - Enable and restart the rsyslog service
-    - Restart syslog-ng for LibreNMS
 
 - name: Permit traffic in default zone for snmp and rsyslog
   ansible.posix.firewalld:
