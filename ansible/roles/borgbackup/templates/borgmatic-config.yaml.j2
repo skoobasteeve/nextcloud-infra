@@ -30,8 +30,10 @@ location:
     # ReadWritePaths list. Prior to borgmatic 1.7.10, repositories
     # was a list of plain path strings.
     repositories:
-        - path: '{{ borg_repo_url }}'
-          label: borg-nextcloud
+        - path: '{{ borg_repo_01_url }}'
+          label: '{{ borg_repo_01_name }}'
+        - path: '{{ borg_repo_02_url }}'
+          label: '{{ borg_repo_02_name }}'
 
     # Working directory for the "borg create" command. Tildes are
     # expanded. Useful for backing up using relative paths. See
