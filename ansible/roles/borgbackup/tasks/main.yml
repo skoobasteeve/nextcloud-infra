@@ -41,4 +41,6 @@
 - name: Generate SSH keypair
   community.crypto.openssh_keypair:
     path: /home/{{ user }}/.ssh/borg_ed25519
+    owner: "{{ user }}"
+    group: "{{ user }}"
     type: ed25519
