@@ -1,0 +1,72 @@
+---
+- name: Install dependenices
+  ansible.builtin.dnf:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - net-snmp
+    - jq
+    - rsyslog
+
+- name: Download script for extend distro
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/distro"
+    dest: "/usr/bin/distro"
+    mode: '755'
+
+- name: Download script for extend osupdates
+  ansible.builtin.get_url:
+    url: "https://raw.githubusercontent.com/librenms/librenms-agent/master/snmp/osupdate"
+    dest: "/etc/snmp/osupdate"
+    mode: '755'
+
+- name: Set snmpdopts
+  ansible.builtin.lineinfile:
+    path: "/etc/sysconfig/snmpd"
+    regexp: '^# OPTIONS=|^OPTIONS='
+    line: 'OPTIONS="-LS4-6d"'
+
+- name: Copy snmpd.conf from template
+  register: snmpd_config
+  ansible.builtin.template:
+    src: snmpd.conf.j2
+    dest: "/etc/snmp/snmpd.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Enable and restart snmpd.service
+
+- name: Copy rsyslog config from template
+  ansible.builtin.template:
+    src: rsyslog.conf.j2
+    dest: "/etc/rsyslog.d/librenms.conf"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - Enable and restart the rsyslog service
+
+- name: Permit traffic in default zone for snmp and rsyslog
+  ansible.posix.firewalld:
+    port: "{{ item }}"
+    permanent: true
+    state: enabled
+  loop:
+    - 161/udp
+    - 161/tcp
+    - 162/udp
+    - 162/tcp
+    - 514/udp
+
+- name: Verify the rsyslog service is running
+  ansible.builtin.systemd:
+    state: started
+    enabled: true
+    name: rsyslog
+
+- name: Verify the snmpd service is running
+  ansible.builtin.systemd:
+    state: started
+    enabled: true
+    name: snmpd

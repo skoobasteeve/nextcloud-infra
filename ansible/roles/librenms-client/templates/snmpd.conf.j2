@@ -1,0 +1,29 @@
+com2sec readonly  default         {{ snmp_community }}
+
+group MyROGroup v2c        readonly
+view all    included  .1                               80
+access MyROGroup ""      any       noauth    exact  all    none   none
+
+syslocation Hetzner Cloud AHS-DC1
+syscontact {{ contact_name}} {{ contact_email }}
+
+agentAddress udp:161,udp6:[::1]:161
+rocommunity {{ snmp_community }}
+
+#OS Distribution Detection
+extend distro /usr/bin/distro
+
+#OS Updates
+extend osupdate /etc/snmp/osupdate
+
+#Hardware Detection
+{% if ansible_architecture == "x86_64" %}
+extend manufacturer '/bin/cat /sys/devices/virtual/dmi/id/sys_vendor'
+extend hardware '/bin/cat /sys/devices/virtual/dmi/id/product_name'
+extend serial '/bin/cat /sys/devices/virtual/dmi/id/product_serial'
+{% endif %}
+
+{% if ansible_architecture == "armv6l" %}
+extend hardware '/bin/cat /sys/firmware/devicetree/base/model'
+extend serial '/bin/cat /sys/firmware/devicetree/base/serial-number'
+{% endif %}

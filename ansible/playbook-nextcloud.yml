@@ -12,9 +12,12 @@
     - roles/tailscale/vars/vault.yml
     - roles/borgbackup/vars/vars.yml
     - roles/borgbackup/vars/vault.yml
+    - roles/librenms-client/vars/vars.yml
+    - roles/librenms-client/vars/vault.yml
 
   roles:
     - common
     - tailscale
     - nextcloud
     - borgbackup
+    - librenms-client

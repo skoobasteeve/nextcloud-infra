@@ -1,0 +1,5 @@
+---
+snmp_community: "{{ vault_snmp_community }}"
+contact_name: "{{ vault_contact_name }}"
+contact_email: "{{ vault_contact_email }}"
+librenms_host: "{{ vault_librenms_host }}"
