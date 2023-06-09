@@ -36,3 +36,8 @@ variable "PASS_HASH" {
   type      = string
   sensitive = true
 }
+
+variable "ALT_SSH_PORT" {
+  type = string
+  sensitive = false
+}
