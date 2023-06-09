@@ -7,14 +7,3 @@ users:
       - ${ssh_key}
     lock_passwd: false
     passwd: ${pass_hash}
-write_files:
-- content: |
-    PasswordAuthentication no
-    PermitRootLogin no
-    Port ${ssh_alt_port}
-
-  path: /etc/ssh/sshd_config.d/10-tf-cloud-init.conf
-  owner: root:root
-  permissions: '0644'
-runcmd:
- - [ systemctl, reload, sshd ]
