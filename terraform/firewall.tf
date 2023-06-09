@@ -24,16 +24,6 @@ resource "hcloud_firewall" "nextcloud" {
   rule {
     direction = "in"
     protocol  = "tcp"
-    port      = "22"
-    source_ips = [
-      "0.0.0.0/0",
-      "::/0"
-    ]
-  }
-
-  rule {
-    direction = "in"
-    protocol  = "tcp"
     port      = var.ALT_SSH_PORT
     source_ips = [
       "0.0.0.0/0",
