@@ -76,6 +76,12 @@
     - http
     - https
 
+- name: Permit traffic on alternate SSH port
+  ansible.posix.firewalld:
+    port: "{{ alt_ssh_port }}"
+    permanent: true
+    state: enabled
+
 - name: Copy systemd unit files
   ansible.builtin.copy:
     src: files/systemd/
@@ -99,6 +105,14 @@
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: "0750"
+
+- name: Create a cron file for Nextcloud that runs every 5 minutes
+  ansible.builtin.cron:
+    name: nextcloud
+    minute: "*/5"
+    user: "{{ user }}"
+    job: "podman exec -u 33 nextcloud-app php /var/www/html/cron.php"
+    cron_file: nextcloud
 
 - name: Register uid of {{ user }}
   ansible.builtin.command:

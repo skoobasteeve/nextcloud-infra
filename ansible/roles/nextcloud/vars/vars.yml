@@ -3,8 +3,9 @@ user: "{{ vault_user }}"
 podman_dir: /home/{{ user }}/.podman
 systemd_dir: "/home/{{ user }}/.config/systemd/user"
 domain: "{{ vault_domain }}"
-nextcloud_version: 25
+nextcloud_version: 26
 mysql_password: "{{ vault_mysql_password }}"
 mysql_database: "{{ vault_mysql_database }}"
 mysql_user: "{{ vault_mysql_user }}"
 mysql_root_password: "{{ vault_mysql_root_password }}"
+alt_ssh_port: "{{ vault_alt_ssh_port }}"

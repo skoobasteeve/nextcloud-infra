@@ -12,12 +12,13 @@
     state: present
     exclusive: true
 
-- name: Disable password ssh auth
-  ansible.builtin.lineinfile:
-    path: "/etc/ssh/sshd_config"
-    regexp: '^PasswordAuthentication'
-    line: 'PasswordAuthentication no'
-    backrefs: true
+- name: Copy sshd config
+  ansible.builtin.copy:
+    src: files/sshd_config
+    dest: /etc/ssh/sshd_config.d/00-ansible.conf
+    owner: root
+    group: root
+    mode: "0600"
   notify: Restart ssh service
 
 - name: Set a hostname
@@ -74,3 +75,15 @@
     - vim-enhanced
     - nload
     - tmux
+
+- name: Permit SSH traffic in default zone
+  ansible.posix.firewalld:
+    service: ssh
+    permanent: true
+    state: enabled
+
+- name: Start firewalld
+  ansible.builtin.service:
+    name: firewalld
+    enabled: true
+    state: started
