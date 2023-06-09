@@ -1,3 +1,4 @@
 ---
 user: "{{ vault_user }}"
 ssh_keys_file: 'files/keys'
+hostname: "{{ vault_domain }}"

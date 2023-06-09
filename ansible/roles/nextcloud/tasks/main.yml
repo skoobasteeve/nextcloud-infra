@@ -23,7 +23,6 @@
 - name: Create nextcloud data mount point
   ansible.builtin.file:
     name: /mnt/nextcloud-data
-    recurse: true
     state: directory
     owner: "{{ user }}"
     group: "{{ user }}"

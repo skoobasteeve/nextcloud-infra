@@ -20,6 +20,11 @@
     backrefs: true
   notify: Restart ssh service
 
+- name: Set a hostname
+  ansible.builtin.hostname:
+    name: "{{ hostname }}"
+    use: systemd
+
 - name: Upgrade all packages to latest version
   ansible.builtin.dnf:
     name: "*"
