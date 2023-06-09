@@ -16,6 +16,8 @@ The containers run in a Podman pod and are managed as user-level [Systemd servic
 - [Hetzner Cloud](https://www.hetzner.cloud) account and API token
 - [Porkbun](https://porkbun.com) account and API token (for DNS)
 - [Tailscale](https://tailscale.com/) account and [auth key](https://tailscale.com/kb/1085/auth-keys/)
+- [LibreNMS](https://www.librenms.org/) server for SNMP and syslog monitoring
+- [Borg](https://www.borgbackup.org/) repostiory for backups
 
 ## Instructions
 
@@ -40,6 +42,7 @@ The Ansible playbook in this repo will perform the following tasks:
 - Add relevant SSH keys
 - Enable auto-updates for Centos
 - Install Tailscale and join the system to your Tailscale network
+- Configure SNMP and rsyslog to send data to a LibreNMS server
 - Install and configure Podman
 - Add the Systemd service files for the Podman containers
 - Configure the Caddy webserver
