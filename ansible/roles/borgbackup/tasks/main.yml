@@ -31,8 +31,8 @@
     mode: "0600"
 
 - name: Copy cron file
-  ansible.builtin.template:
-    src: templates/borgmatic-cron.j2
+  ansible.builtin.copy:
+    src: files/borgmatic-cron
     dest: /etc/cron.d/borgmatic
     owner: root
     group: root
