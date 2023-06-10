@@ -75,6 +75,7 @@
     - vim-enhanced
     - nload
     - tmux
+    - bind-utils
 
 - name: Permit SSH traffic in default zone
   ansible.posix.firewalld:
