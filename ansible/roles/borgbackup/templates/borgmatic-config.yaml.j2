@@ -410,9 +410,9 @@ hooks:
     before_backup:
         - echo "Backup process initiated."
         - echo "Placing Nextcloud in maintenance mode."
-        - sudo -u {{ user }} podman exec -u 33 nextcloud-app php occ maintenance:mode --on
+        - sudo -Hiu {{ user }} podman exec -u 33 nextcloud-app php occ maintenance:mode --on
         - echo "Dumping MySQL database."
-        - sudo -u {{ user }} podman exec -u 999 mariadb sh -c 'mysqldump --single-transaction --default-character-set=utf8mb4 -h localhost -u {{ mysql_user }} --password={{ mysql_password }} {{ mysql_database }} > /mysql_backups/nextcloud-sqlbkp_`date +"%Y%m%d"`.bak'
+        - sudo -Hiu {{ user }} podman exec -u 999 mariadb sh -c 'mysqldump --single-transaction --default-character-set=utf8mb4 -h localhost -u {{ mysql_user }} --password={{ mysql_password }} {{ mysql_database }} > /mysql_backups/nextcloud-sqlbkp_`date +"%Y%m%d"`.bak'
         - echo "Starting backup."
     # List of one or more shell commands or scripts to execute
     # before pruning, run once per repository.
@@ -441,7 +441,7 @@ hooks:
         - echo Pruning MySQL dumps.
         - find /home/{{ user }}/.podman/nextcloud/mysql_backups -mtime +4 -exec rm -f {} \;
         - echo "Turning Nextcloud maintenance mode off."
-        - sudo -u {{ user }} podman exec -u 33 nextcloud-app php occ maintenance:mode --off
+        - sudo -Hiu {{ user }} podman exec -u 33 nextcloud-app php occ maintenance:mode --off
 
     # List of one or more shell commands or scripts to execute
     # after compaction, run once per repository.
@@ -475,7 +475,7 @@ hooks:
     on_error:
         - echo Error during create/prune/compact/check.
         - echo "Turning Nextcloud maintenance mode off."
-        - sudo -u {{ user }} podman exec -u 33 nextcloud-app php occ maintenance:mode --off
+        - sudo -Hiu {{ user }} podman exec -u 33 nextcloud-app php occ maintenance:mode --off
 
     # List of one or more shell commands or scripts to execute
     # before running all actions (if one of them is "create").
