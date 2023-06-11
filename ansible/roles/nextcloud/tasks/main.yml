@@ -106,12 +106,21 @@
     group: "{{ user }}"
     mode: "0750"
 
-- name: Create a cron file for Nextcloud that runs every 5 minutes
+- name: Create a cron file for Nextcloud maintenance
   ansible.builtin.cron:
     name: nextcloud
     minute: "*/5"
     user: "{{ user }}"
     job: "podman exec -u 33 nextcloud-app php /var/www/html/cron.php"
+    cron_file: nextcloud
+
+- name: Create a cron file for Nextcloud preview generation
+  ansible.builtin.cron:
+    name: nextcloud preview-generator
+    minute: "0"
+    hour: "6"
+    user: "{{ user }}"
+    job: "podman exec -u 33 nextcloud-app php occ preview:pre-generate"
     cron_file: nextcloud
 
 - name: Register uid of {{ user }}
