@@ -35,7 +35,8 @@ ExecStart=/usr/bin/podman run \
 	--name mariadb docker.io/library/mariadb:10 \
 	--transaction-isolation=READ-COMMITTED \
     --log-bin=binlog \
-    --binlog-format=ROW
+    --binlog-format=ROW \
+	--max_allowed_packet=256000000
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id
 Type=notify
