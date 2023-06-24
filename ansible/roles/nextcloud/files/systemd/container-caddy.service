@@ -28,6 +28,7 @@ ExecStart=/usr/bin/podman run \
 	--volume %h/.podman/nextcloud/caddy/Caddyfile:/etc/caddy/Caddyfile:z \
 	--volume %h/.podman/nextcloud/caddy/caddy-data:/data:z \
 	--label "io.containers.autoupdate=registry" \
+	--log-driver=journald \
 	--name caddy docker.io/library/caddy
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id

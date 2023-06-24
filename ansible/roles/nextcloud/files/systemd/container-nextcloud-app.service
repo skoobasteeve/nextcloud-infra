@@ -32,6 +32,7 @@ ExecStart=/usr/bin/podman run \
 	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
 	--volume /mnt/nextcloud-data/data:/var/www/html/data:z \
 	--label "io.containers.autoupdate=registry" \
+	--log-driver=journald \
 	--name nextcloud-app docker.io/library/nextcloud:${NEXTCLOUD_VERSION}-fpm
 ExecStop=/usr/bin/podman stop --ignore --cidfile=%t/%n.ctr-id
 ExecStopPost=/usr/bin/podman rm -f --ignore --cidfile=%t/%n.ctr-id

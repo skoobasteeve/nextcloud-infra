@@ -32,6 +32,7 @@ ExecStart=/usr/bin/podman run \
 	--volume %h/.podman/nextcloud/mariadb:/var/lib/mysql:z \
 	--volume %h/.podman/nextcloud/mysql_backups:/mysql_backups:z \
 	--label "io.containers.autoupdate=registry" \
+	--log-driver=journald \
 	--name mariadb docker.io/library/mariadb:10 \
 	--transaction-isolation=READ-COMMITTED \
     --log-bin=binlog \
