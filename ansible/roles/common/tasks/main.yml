@@ -82,6 +82,15 @@
     service: ssh
     permanent: true
     state: enabled
+  notify: Restart firewalld service
+
+- name: Permit SSH traffic on non-default port
+  ansible.posix.firewalld:
+    port: "{{ alt_ssh_port }}"
+    permanent: true
+    state: enabled
+  when: (alt_ssh_port is defined) and (alt_ssh_port|length > 0)
+  notify: Restart firewalld service
 
 - name: Start firewalld
   ansible.builtin.service:
