@@ -1,8 +1,4 @@
-- name: Restart ssh service
-  ansible.builtin.systemd:
-    state: restarted
-    name: sshd
-
+---
 - name: Restart firewalld service
   ansible.builtin.systemd:
     state: restarted

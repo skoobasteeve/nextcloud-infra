@@ -75,12 +75,14 @@
   loop:
     - http
     - https
+  notify: Restart firewalld service
 
 - name: Permit traffic on alternate SSH port
   ansible.posix.firewalld:
     port: "{{ alt_ssh_port }}"
     permanent: true
     state: enabled
+  notify: Restart firewalld service
 
 - name: Copy systemd unit files
   ansible.builtin.copy:
