@@ -104,6 +104,11 @@ Backup is configured via the `borgbackup` Ansible role in the repo and uses the 
 
 Assuming you've set the variables in `roles/borgbackup/vars/vault.yml`, the only thing you'll need to do is add the generated SSH key to the `authorized_keys` file on the Borg server. Alternatively, if you use [Borgbase](https://www.borgbase.com), make sure you've added the key under SSH Keys and attached that key to the repo. 
 
+First, initialize the borg repositories
+``` bash
+sudo /root/.local/bin/borgmatic init -e repokey
+```
+
 To test the backup, run:
 ``` bash
 sudo /root/.local/bin/borgmatic
