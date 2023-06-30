@@ -7,3 +7,7 @@ users:
       - ${ssh_key}
     lock_passwd: false
     passwd: ${pass_hash}
+write_files:
+  - path: /etc/ssh/sshd_config.d/30-terraform.conf
+    content: |
+      Port ${ssh_port}
