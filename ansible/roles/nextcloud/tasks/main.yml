@@ -19,6 +19,9 @@
     - "{{ podman_dir }}/nextcloud/caddy"
     - "{{ podman_dir }}/nextcloud/caddy/caddy-data"
     - "{{ systemd_dir }}"
+  notify:
+    - Grant permissions to mysql_backups directory to container user
+    - Grant permissions to mariadb directory to container user
 
 - name: Create nextcloud data mount point
   ansible.builtin.file:
@@ -40,6 +43,16 @@
     fstype: ext4
     state: mounted
 
+- name: Get stats of the Nextcloud data directory
+  ansible.builtin.stat:
+    path: /mnt/nextcloud-data/data
+  register: ncdata
+
+- name: Get stats of the mysql_backups directory
+  ansible.builtin.stat:
+    path: "{{ podman_dir }}/nextcloud/mysql_backups"
+  register: backupdir
+
 - name: Create data directory
   ansible.builtin.file:
     name: /mnt/nextcloud-data/data
@@ -48,18 +61,12 @@
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: "0750"
-
-- name: Give permissions to nextcloud data directory for container user
-  become: false
-  become_user: :"{{ user }}"
-  ansible.builtin.command:
-    cmd: podman unshare chown -R 33:33 /mnt/nextcloud-data/data
-
-- name: Give permissions to mysql_backups directory for container user
-  become: false
-  become_user: :"{{ user }}"
-  ansible.builtin.command:
-    cmd: podman unshare chown -R 999:999 /home/{{ user }}/.podman/nextcloud/mysql_backups
+  register: create_ncdata
+  changed_when: create_ncdata.owner == user
+  when: not ncdata.stat.exists or (ncdata.stat.uid != 100032 or ncdata.stat.gid != 100032)
+  notify:
+    - Grant permissions to nextcloud data directory to container user
+    - Restart Nextcloud services
 
 - name: Allow unprivileged access to port 80
   ansible.posix.sysctl:
@@ -91,6 +98,7 @@
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: "0640"
+  notify: Restart Nextcloud services
 
 - name: Copy caddyfile template
   ansible.builtin.template:
@@ -99,6 +107,7 @@
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: "0750"
+  notify: Restart Nextcloud services
 
 - name: Copy nextcloud env template
   ansible.builtin.template:
@@ -107,6 +116,7 @@
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: "0750"
+  notify: Restart Nextcloud services
 
 - name: Create a cron file for Nextcloud maintenance
   ansible.builtin.cron:
@@ -125,23 +135,13 @@
     job: "podman exec -u 33 nextcloud-app php occ preview:pre-generate"
     cron_file: nextcloud
 
-- name: Register uid of {{ user }}
-  ansible.builtin.command:
-    cmd: id -u {{ user }}
-  register: uid
-
 - name: Check if user is lingering
   ansible.builtin.stat:
     path: "/var/lib/systemd/linger/{{ user }}"
   register: user_lingering
   when: user != "root"
-
-- name: Enable lingering
-  ansible.builtin.command:
-    cmd: loginctl enable-linger {{ user }}
-  when:
-    - user != "root"
-    - not user_lingering.stat.exists
+  changed_when: not user_lingering.stat.exists
+  notify: Enable lingering
 
 - name: Reload systemd
   become: true
@@ -149,19 +149,17 @@
   ansible.builtin.systemd:
     scope: user
     daemon_reload: true
+  notify: Restart Nextcloud services
 
-- name: Start systemd services
+- name: Start Nextcloud services
   become: true
   become_user: "{{ user }}"
   ansible.builtin.systemd:
-    name: "{{ item }}"
+    name: "pod-nextcloud-pod.service"
     scope: user
-    state: started
     enabled: true
-  loop:
-    - "pod-nextcloud-pod.service"
-    - "container-mariadb.service"
-    - "container-nextcloud-app.service"
-    - "container-caddy.service"
+    state: started
+  register: ncstart
+  changed_when: ncstart.status.ActiveState == "inactive"
   environment:
-    XDG_RUNTIME_DIR: /run/user/{{ uid.stdout }}
+    XDG_RUNTIME_DIR: /run/user/{{ ansible_user_uid }}
