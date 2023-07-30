@@ -1,7 +1,5 @@
 # Nextcloud Deployment with Terraform and Ansible
 
-**IN ACTIVE DEVELOPMENT**
-
 This repo holds the configuration files for my personal Nextcloud server running in Hetzner Cloud. It uses rootless Podman on top of Centos Stream 9 running the following containers:
 - [nextcloud-fpm](https://hub.docker.com/_/nextcloud)
 - [mariadb](https://hub.docker.com/_/mariadb)
