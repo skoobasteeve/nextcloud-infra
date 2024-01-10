@@ -6,21 +6,27 @@
 
 - name: Grant permissions to nextcloud data directory to container user
   become: false
-  become_user: :"{{ user }}"
+  become_user: "{{ user }}"
   ansible.builtin.command:
     cmd: podman unshare chown -R 33:33 /mnt/nextcloud-data/data
 
+- name: Grant permissions to nextcloud config files to container user
+  become: false
+  become_user: "{{ user }}"
+  ansible.builtin.command:
+    cmd: podman unshare chown -R 33:33 {{ podman_dir }}/nextcloud/nextcloud-config/config
+
 - name: Grant permissions to mysql_backups directory to container user
   become: false
-  become_user: :"{{ user }}"
+  become_user: "{{ user }}"
   ansible.builtin.command:
-    cmd: podman unshare chown -R 999:999 /home/{{ user }}/.podman/nextcloud/mysql_backups
+    cmd: podman unshare chown -R 999:999 {{ podman_dir }}/nextcloud/mysql_backups
 
 - name: Grant permissions to mariadb directory to container user
   become: false
-  become_user: :"{{ user }}"
+  become_user: "{{ user }}"
   ansible.builtin.command:
-    cmd: podman unshare chown -R 999:999 /home/{{ user }}/.podman/nextcloud/mariadb
+    cmd: podman unshare chown -R 999:999 {{ podman_dir }}/nextcloud/mariadb
 
 - name: Enable lingering
   ansible.builtin.command:
