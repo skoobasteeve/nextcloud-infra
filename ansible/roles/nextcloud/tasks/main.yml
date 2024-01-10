@@ -163,3 +163,19 @@
   changed_when: ncstart.status.ActiveState == "inactive"
   environment:
     XDG_RUNTIME_DIR: /run/user/{{ ansible_user_uid }}
+
+- name: Wait for Nextcloud to start and create its directories
+  ansible.builtin.wait_for:
+    path: "{{ podman_dir }}/nextcloud/nextcloud-config/config/config.sample.php"
+    sleep: 3
+
+- name: Copy Nextcloud config.php files
+  ansible.builtin.copy:
+    src: files/config/
+    dest: "{{ podman_dir }}/nextcloud/nextcloud-config/config"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
+  notify:
+    - Grant permissions to nextcloud config files to container user
+    - Restart Nextcloud services
