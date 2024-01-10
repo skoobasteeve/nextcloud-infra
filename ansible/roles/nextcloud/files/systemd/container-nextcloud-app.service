@@ -29,6 +29,16 @@ ExecStart=/usr/bin/podman run \
 	--env MYSQL_DATABASE=nextcloud \
 	--env MYSQL_USER=${MYSQL_USER} \
 	--env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+	--env REDIS_HOST=redis \
+	--env REDIS_HOST_PASSWORD=${REDIS_PASSWORD} \
+	--env SMTP_HOST=${SMTP_HOST} \
+	--env SMTP_SECURE=${SMTP_SECURE} \
+	--env SMTP_PORT=${SMTP_PORT} \
+	--env SMTP_AUTHTYPE=${SMTP_AUTHTYPE} \
+	--env SMTP_NAME=${SMTP_NAME} \
+	--env SMTP_PASSWORD=${SMTP_PASSWORD} \
+	--env MAIL_FROM_ADDRESS=${MAIL_FROM_ADDRESS} \
+	--env MAIL_DOMAIN=${MAIL_DOMAIN} \
 	--volume %h/.podman/nextcloud/nextcloud-config:/var/www/html:z \
 	--volume /mnt/nextcloud-data/data:/var/www/html/data:z \
 	--label "io.containers.autoupdate=registry" \
