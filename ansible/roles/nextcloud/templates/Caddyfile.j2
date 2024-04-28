@@ -33,6 +33,16 @@
 	}
 	respond @forbidden 404
 
+    # required for legacy support, fixes multi-file/folder downloads
+    @notlegacy {
+        path *.php *.php/
+        not path_regexp ^/(index|remote|public|cron|core/ajax/update|status|ocs/v[12]|updater/.+|ocs-provider/.+|.+/richdocumentscode(_arm64)?/proxy)
+    }
+    rewrite @notlegacy /index.php{uri}
+
+    redir /.well-known/carddav /remote.php/dav 301
+    redir /.well-known/caldav /remote.php/dav 301
+
     redir /.well-known/carddav /remote.php/dav 301
     redir /.well-known/caldav /remote.php/dav 301
 }
