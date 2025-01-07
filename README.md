@@ -4,6 +4,7 @@ This repo holds the configuration files for my personal Nextcloud server running
 - [nextcloud-fpm](https://hub.docker.com/_/nextcloud)
 - [mariadb](https://hub.docker.com/_/mariadb)
 - [caddy](https://hub.docker.com/_/caddy)
+- [redis](https://hub.docker.com/_/redis)
 
 The containers run in a Podman pod and are managed as user-level [Systemd service files](https://docs.podman.io/en/latest/markdown/podman-generate-systemd.1.html).
 
