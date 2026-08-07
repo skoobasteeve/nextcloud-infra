@@ -1,0 +1,12 @@
+; Managed by Ansible - PHP-FPM pool tuning for Nextcloud.
+; Loaded after the image's www.conf / zz-docker.conf (alphabetical order),
+; so these directives override the stock defaults. The default
+; pm.max_children = 5 is too low once ONLYOFFICE starts making concurrent
+; callbacks to Nextcloud, which exhausts the pool and stalls the editor.
+[www]
+pm = dynamic
+pm.max_children = {{ php_fpm_max_children }}
+pm.start_servers = {{ php_fpm_start_servers }}
+pm.min_spare_servers = {{ php_fpm_min_spare_servers }}
+pm.max_spare_servers = {{ php_fpm_max_spare_servers }}
+pm.max_requests = 500

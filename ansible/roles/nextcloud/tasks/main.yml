@@ -18,6 +18,11 @@
     - "{{ podman_dir }}/nextcloud/mysql_backups"
     - "{{ podman_dir }}/nextcloud/caddy"
     - "{{ podman_dir }}/nextcloud/caddy/caddy-data"
+    - "{{ podman_dir }}/nextcloud/onlyoffice"
+    - "{{ podman_dir }}/nextcloud/onlyoffice/logs"
+    - "{{ podman_dir }}/nextcloud/onlyoffice/data"
+    - "{{ podman_dir }}/nextcloud/onlyoffice/lib"
+    - "{{ podman_dir }}/nextcloud/php-fpm"
     - "{{ systemd_dir }}"
   notify:
     - Grant permissions to mysql_backups directory to container user
@@ -74,6 +79,17 @@
     value: '80'
     state: present
 
+- name: Raise inotify limits for rootless Podman and OnlyOffice
+  ansible.posix.sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    state: present
+    sysctl_set: true
+    reload: true
+  loop:
+    - { name: fs.inotify.max_user_instances, value: '1024' }
+    - { name: fs.inotify.max_user_watches, value: '1048576' }
+
 - name: Permit traffic in default zone for http(s)
   ansible.posix.firewalld:
     service: "{{ item }}"
@@ -107,6 +123,24 @@
     owner: "{{ user }}"
     group: "{{ user }}"
     mode: "0750"
+  notify: Restart Nextcloud services
+
+- name: Copy PHP-FPM tuning config
+  ansible.builtin.template:
+    src: templates/php-fpm-nextcloud.conf.j2
+    dest: "{{ podman_dir }}/nextcloud/php-fpm/zzz-nextcloud.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
+  notify: Restart Nextcloud services
+
+- name: Copy OnlyOffice nginx config template
+  ansible.builtin.template:
+    src: templates/onlyoffice-ds.conf.tmpl.j2
+    dest: "{{ podman_dir }}/nextcloud/onlyoffice/ds.conf.tmpl"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: "0644"
   notify: Restart Nextcloud services
 
 - name: Copy nextcloud env template

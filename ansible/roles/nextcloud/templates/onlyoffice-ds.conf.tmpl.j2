@@ -1,0 +1,9 @@
+include /etc/nginx/includes/http-common.conf;
+server {
+  listen 0.0.0.0:{{ onlyoffice_internal_port }};
+  listen [::]:{{ onlyoffice_internal_port }} default_server;
+  server_tokens off;
+
+  set $secure_link_secret verysecretstring;
+  include /etc/nginx/includes/ds-*.conf;
+}

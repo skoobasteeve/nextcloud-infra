@@ -5,6 +5,7 @@ This repo holds the configuration files for my personal Nextcloud server running
 - [mariadb](https://hub.docker.com/_/mariadb)
 - [caddy](https://hub.docker.com/_/caddy)
 - [redis](https://hub.docker.com/_/redis)
+- [onlyoffice/documentserver](https://hub.docker.com/r/onlyoffice/documentserver)
 
 The containers run in a Podman pod and are managed as user-level [Systemd service files](https://docs.podman.io/en/latest/markdown/podman-generate-systemd.1.html).
 
@@ -97,6 +98,25 @@ Speed up photo thumbnail generation and reduce size
 - [Preview Generator](https://apps.nextcloud.com/apps/previewgenerator) - Automatically generate thumbnail previews for photos on a scheduled basis, speeding up load times for previews.
 - [Two-Factor WebAuthn](https://apps.nextcloud.com/apps/twofactor_webauthn) - Use a FIDO2 security key as a second factor.
 - [Tasks](https://apps.nextcloud.com/apps/tasks) - Task management with CalDAV sync.
+- [ONLYOFFICE](https://apps.nextcloud.com/apps/onlyoffice) - Connector for the bundled ONLYOFFICE Document Server (see below).
+
+#### **ONLYOFFICE integration**
+The ONLYOFFICE Document Server runs as the `onlyoffice` container inside the Nextcloud pod. Because all pod containers share a single network namespace, the document server's internal nginx is moved off port 80 (which Caddy uses) to the port defined by `onlyoffice_internal_port` (default `8083`) via the templated `onlyoffice-ds.conf.tmpl`. Caddy reverse-proxies external requests from `https://<domain>/onlyoffice/` to it, so no additional DNS record or published port is required.
+
+The JSON Web Token secret shared between Nextcloud and the document server is stored in the vault as `vault_onlyoffice_jwt_secret`. Make sure it is set before running the playbook.
+
+After installing the ONLYOFFICE connector app, configure it (Settings -> ONLYOFFICE) or run the following `occ` commands, substituting your domain and the JWT secret you set in the vault:
+
+``` bash
+podman exec -u 33 nextcloud-app php occ config:app:set onlyoffice DocumentServerUrl --value="https://<domain>/onlyoffice/"
+podman exec -u 33 nextcloud-app php occ config:app:set onlyoffice DocumentServerInternalUrl --value="http://localhost:8083/"
+podman exec -u 33 nextcloud-app php occ config:app:set onlyoffice StorageUrl --value="https://<domain>/"
+podman exec -u 33 nextcloud-app php occ config:app:set onlyoffice jwt_secret --value="<vault_onlyoffice_jwt_secret>"
+```
+
+- `DocumentServerUrl` is the public, browser-facing address served through Caddy.
+- `DocumentServerInternalUrl` lets Nextcloud reach the document server directly over the shared pod network (`localhost:8083`), bypassing Caddy.
+- `StorageUrl` is the address the document server uses to fetch and save files from Nextcloud.
 
 ## Backup
 Backup is configured via the `borgbackup` Ansible role in the repo and uses the [Borg](https://www.borgbackup.org/) and [Borgmatic](https://torsion.org/borgmatic/) projects to back up the Nextcloud configuration, data directory, and MySQL database. This backup runs once daily.

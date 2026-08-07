@@ -4,6 +4,13 @@ podman_dir: /home/{{ user }}/.podman
 systemd_dir: "/home/{{ user }}/.config/systemd/user"
 domain: "{{ vault_domain }}"
 nextcloud_version: 27
+onlyoffice_version: "9.4"
+onlyoffice_internal_port: 8083
+onlyoffice_jwt_secret: "{{ vault_onlyoffice_jwt_secret }}"
+php_fpm_max_children: 32
+php_fpm_start_servers: 4
+php_fpm_min_spare_servers: 2
+php_fpm_max_spare_servers: 8
 mysql_password: "{{ vault_mysql_password }}"
 mysql_database: "{{ vault_mysql_database }}"
 mysql_user: "{{ vault_mysql_user }}"
