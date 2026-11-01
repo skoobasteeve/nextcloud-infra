@@ -29,12 +29,14 @@ ExecStart=/usr/bin/podman run \
 	--env MYSQL_USER=${MYSQL_USER} \
 	--env MYSQL_PASSWORD=${MYSQL_PASSWORD} \
 	--env MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD} \
+	--env MARIADB_AUTO_UPGRADE=1 \
 	--volume %h/.podman/nextcloud/mariadb:/var/lib/mysql:z \
 	--volume %h/.podman/nextcloud/mysql_backups:/mysql_backups:z \
 	--label "io.containers.autoupdate=registry" \
 	--log-driver=journald \
 	--name mariadb docker.io/library/mariadb:10 \
 	--transaction-isolation=READ-COMMITTED \
+	--innodb-log-file-size=256000000 \
     --log-bin=binlog \
     --binlog-format=ROW \
 	--max_allowed_packet=256000000
